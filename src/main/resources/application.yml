@@ -1,0 +1,30 @@
+eureka:
+  instance:
+    instance-id: ${spring.application.name}:${random.uuid}
+server:
+  port: 8080
+spring:
+  application:
+    name: api-gateway
+  cloud:
+    gateway:
+      routes:
+        - id: service-client
+          uri: lb://SERVICE-CLIENT
+          predicates:
+            - Path=/v1/client/**,/v1/clientType/**,/v1/identityType/**
+        - id: service-passiveproduct
+          uri: lb://SERVICE-PASSIVEPRODUCT
+          predicates:
+            - Path=/v1/accountmovement/**,/v1/bankaccount/**
+        - id: service-activeproduct
+          uri: lb://SERVICE-ACTIVEPRODUCT
+          predicates:
+            - Path=/v1/bankloan/**,/v1/creditcard/**,/v1/movementCC/**
+      discovery:
+        locator:
+          enabled: true
+    loadbalancer:
+      ribbon:
+        enabled: false
+
